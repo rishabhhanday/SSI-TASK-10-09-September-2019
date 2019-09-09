@@ -34,7 +34,7 @@ public class GetBooks extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		File file = new File("F:/JOB/worldpay/Documents/Extra/" + request.getParameter("fname"));
-		PrintWriter pw = response.getWriter();
+		
 		
 		
 		if (file.isFile()) {

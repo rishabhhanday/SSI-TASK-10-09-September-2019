@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/InsertBooks")
 public class InsertBooks extends HttpServlet {
+	Connection con;
+	PreparedStatement st;
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -25,6 +27,29 @@ public class InsertBooks extends HttpServlet {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public void destroy() {
+		try {
+			con.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	@Override
+	public void init() throws ServletException {
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			System.out.println("Driver Loaded");
+
+			con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "rishabh", "abcd1234");
+			String sql = "insert into books values(?,?,?,?)";
+			st = con.prepareStatement(sql);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
@@ -32,18 +57,12 @@ public class InsertBooks extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			System.out.println("Driver Loaded");
 
-			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "rishabh", "abcd1234");
-			String sql = "insert into books values(?,?,?,?)";
-			PreparedStatement st = con.prepareStatement(sql);
 			st.setInt(1, Integer.parseInt(request.getParameter("bid")));
 			st.setString(2, request.getParameter("bname"));
 			st.setString(3, request.getParameter("bauth"));
 			st.setString(4, request.getParameter("bsub"));
-			
-
+			st.executeUpdate();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 

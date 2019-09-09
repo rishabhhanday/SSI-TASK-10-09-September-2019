@@ -34,7 +34,6 @@ public class DownloadBooks extends HttpServlet {
 			throws ServletException, IOException {
 		try {
 			File f = new File("F:/JOB/worldpay/Documents/Extra");
-
 			PrintWriter out = response.getWriter();
 			out.println("<br>");
 			out.println("<h1>Books available to download</h1>");
@@ -44,15 +43,10 @@ public class DownloadBooks extends HttpServlet {
 				for (String s : str) {
 					out.println("<a href='GetBooks?fname=" + s + "'>" + s + "</a>");
 					out.println("<br>");
-					
 
 				}
 			}
-				
-				
-				
-				
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

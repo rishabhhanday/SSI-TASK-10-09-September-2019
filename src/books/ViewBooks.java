@@ -19,42 +19,63 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/ViewBooks")
 public class ViewBooks extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ViewBooks() {
-        super();
-        
-    }
+	Connection con;
+	PreparedStatement st;
+	ResultSet rs;
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			System.out.println("Driver Loaded");
+	public ViewBooks() {
+		super();
 
-			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "rishabh", "abcd1234");
-			String sql = "select bsub from books";
-			PreparedStatement st = con.prepareStatement(sql);
-			ResultSet rs = st.executeQuery();
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		try {
+			rs = st.executeQuery();
 			PrintWriter out = response.getWriter();
 			out.println("<form action='ViewSubBooks'>");
 			out.println("Select Book's subject to search");
 			out.println("<select name='bsub'>");
-			while(rs.next()){
-				out.println("<option>"+rs.getString(1)+"</option>");
+			while (rs.next()) {
+				out.println("<option>" + rs.getString(1) + "</option>");
 			}
 			out.println("</select>");
 			out.println("<input type='submit' value='View Books'>");
 			out.println("</form>");
-			}
-		catch(Exception ex){
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
+
+	}
+
+	@Override
+	public void destroy() {
+		try {
+			con.close();
+		} catch (Exception ex) {
+		}
+	}
+
+	@Override
+	public void init() throws ServletException {
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			System.out.println("Driver Loaded");
+
+			con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "rishabh", "abcd1234");
+			String sql = "select bsub from books";
+			st = con.prepareStatement(sql);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 }

@@ -43,7 +43,7 @@ public class GetBooks extends HttpServlet {
 			fis.read(b);
 			ServletOutputStream out = response.getOutputStream();
 			out.write(b);
-			
+			fis.close();
 			
 		}
 
